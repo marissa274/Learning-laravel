@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  database:
+    build:
+      context: "./docker/services/postgres"
+    container_name: "introduction-laravel"
+    restart: "always"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "introduction-laravel"
+      POSTGRES_USER: "dev"
+      POSTGRES_PASSWORD: "dev"
