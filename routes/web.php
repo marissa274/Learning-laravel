@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -12,7 +13,7 @@ Route::get('/', function () {
 });
 
 Route::get('/posts', function () {
-    $posts = DB::select("SELECT * FROM posts");
+    $posts = Post::all();
     return view('posts.index', [
         'posts' => $posts
     ]);
@@ -24,8 +25,7 @@ Route::post("/posts", function (Request $request) {
        "description" => "nullable|min:10"
    ]);
 
-    DB::insert("INSERT INTO posts (title, description) VALUES (? ,?)", [$validated["title"], $validated["description"]]
-    );
+   Post::query()->create($validated);
 
     return redirect("/posts");
 });
@@ -36,22 +36,12 @@ Route::post("/posts", function (Request $request) {
 // tous ce qui est entre les acolades on appelle ca un  segment
 //ls vaiables qui sont dans les accollades doivent etre du meme nomque la variables qui est dans string
 Route::get('/posts/{id}', function (string $id) {
-    $post = DB::selectOne("SELECT * FROM posts WHERE id = ?" ,[$id]);
-    if(!$post){
-        abort(404);
-    }
-    return view('posts.show', [
-        'post' => $post
-    ]);
+$post = Post::query()->findOrFail($id);
+return view('posts.show', ["post" => $post]);
 })->whereNumber('id');
 
-
 Route:: get("/posts/{id}/edit", function (string $id) {
-    $post = DB::selectOne("SELECT * FROM posts WHERE id = ?" ,[$id]);
-
-    if(!$post == null){
-        abort(404);
-    }
+    $post = post::query()->findOrFail($id);
     return view('posts.edit', ["post" => $post]);
 });
 
@@ -60,18 +50,12 @@ Route::put("/posts/{id}", function (Request $request, string $id) {
         'title' => 'required|max:255',
         "description" => "nullable|min:10"
     ]);
-    $post = DB::selectOne("SELECT * FROM posts WHERE id = ?" ,[$id]);
-    if(!$post == null){
-        abort(404);
-    }
-
-    DB::update("UPDATE posts SET title =?, description =? WHERE id = ?", [$validated["title"], $validated["description"], $id]);
-
+        Post::query()->findOrFail($id)->update($validated);
     return redirect("/posts/$id");
 });
 
 Route::delete('/posts/{id}', function (string $id) {
-    DB::delete("DELETE FROM posts WHERE id = ?" ,[$id]);
+    post::query()->findOrFail($id)->delete();
     return redirect("/posts");
 });
 

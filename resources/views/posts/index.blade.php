@@ -17,3 +17,5 @@
     @endif
 
 </x-layout>
+
+//orm: code qui vous permet de parler directement avec la base de données
