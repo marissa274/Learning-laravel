@@ -45,6 +45,11 @@ Route::get('/posts/{id}', function (string $id) {
     ]);
 })->whereNumber('id');
 
+Route::delete('/posts/{id}', function (string $id) {
+    DB::delete("DELETE FROM posts WHERE id = ?" ,[$id]);
+    return redirect("/posts");
+});
+
 Route::get('/posts/create', function () {
     return view('posts.create');
 });
