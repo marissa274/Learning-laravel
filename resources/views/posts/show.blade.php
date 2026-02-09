@@ -1,4 +1,4 @@
 <x-layout>
-    <h1>{{ $post ->title }}</h1>
-    <p>{{ $post ->title }}</p>
+    <h1>{{ $post ->description }}</h1>
+    <p>{{ $post ->description }}</p>
 </x-layout>
