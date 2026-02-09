@@ -45,6 +45,31 @@ Route::get('/posts/{id}', function (string $id) {
     ]);
 })->whereNumber('id');
 
+
+Route:: get("/posts/{id}/edit", function (string $id) {
+    $post = DB::selectOne("SELECT * FROM posts WHERE id = ?" ,[$id]);
+
+    if(!$post == null){
+        abort(404);
+    }
+    return view('posts.edit', ["post" => $post]);
+});
+
+Route::put("/posts/{id}", function (Request $request, string $id) {
+    $validated = $request->validate([
+        'title' => 'required|max:255',
+        "description" => "nullable|min:10"
+    ]);
+    $post = DB::selectOne("SELECT * FROM posts WHERE id = ?" ,[$id]);
+    if(!$post == null){
+        abort(404);
+    }
+
+    DB::update("UPDATE posts SET title =?, description =? WHERE id = ?", [$validated["title"], $validated["description"], $id]);
+
+    return redirect("/posts/$id");
+});
+
 Route::delete('/posts/{id}', function (string $id) {
     DB::delete("DELETE FROM posts WHERE id = ?" ,[$id]);
     return redirect("/posts");

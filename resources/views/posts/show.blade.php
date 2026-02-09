@@ -6,4 +6,5 @@
     @csrf
      <button>Supprimer</button>
     </form>
+    <a href="posts/{{ $post->id }}/edit">Modifier</a>
 </x-layout>
