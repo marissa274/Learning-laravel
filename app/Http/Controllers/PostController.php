@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdateePostRequest;
 use App\Models\Post;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -31,13 +33,10 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StorePostRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            "title" => "required|max:255",
-            "description" => "nullable|min:10",
-        ]);
-        Post::query()->create($validated);
+
+        Post::query()->create($request -> validated());
         return redirect('/posts');
     }
 
@@ -60,13 +59,10 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $posts): RedirectResponse
+    public function update(UpdateePostRequest $request, Post $posts): RedirectResponse
     {
-        $validated = $request->validate([
-            "title" => "required|max:255",
-            "description" => "nullable|min:10",
-        ]);
-        $posts->update($validated);
+
+        $posts->update($request -> validated());
         return redirect('/posts');
     }
 
